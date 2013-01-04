@@ -20,14 +20,14 @@ class LNSWidget extends WP_Widget
 	function __construct() {
 		parent::__construct(
 			'lns_widget', // Base ID
-			'LNS_Widget', // Name
-			array( 'description' => __('LNS_Widget', 'text_domain'), ) // Args
+			'LNS Widget', // Name
+			array( 'description' => __('LNS Widget', 'text_domain'), ) // Args
 		);
 	}
 	/**
 	 * Front-end display of widget.
 	 *
-	 * @see WP_Widget::widget()
+	 * @see LNSWidget::widget()
 	 *
 	 * @param array $args     Widget arguments.
 	 * @param array $instance Saved values from database.
@@ -39,14 +39,14 @@ class LNSWidget extends WP_Widget
 		echo $before_widget;
 		if ( ! empty( $title ) )
 			echo $before_title . $title . $after_title;
-		echo __( 'Hello, World!', 'text_domain' );
+		echo __( $this->get_all_sites(), 'text_domain' );
 		echo $after_widget;
 	}
 
 	/**
 	 * Sanitize widget form values as they are saved.
 	 *
-	 * @see WP_Widget::update()
+	 * @see LNSWidget::update()
 	 *
 	 * @param array $new_instance Values just sent to be saved.
 	 * @param array $old_instance Previously saved values from database.
@@ -63,7 +63,7 @@ class LNSWidget extends WP_Widget
 	/**
 	 * Back-end widget form.
 	 *
-	 * @see WP_Widget::form()
+	 * @see LNSWidget::form()
 	 *
 	 * @param array $instance Previously saved values from database.
 	 */
@@ -81,41 +81,56 @@ class LNSWidget extends WP_Widget
 		</p>
 		<?php 
 	}
+	
+	/**
+	  * Get all sites
+	  *
+	  * @see LNSWidget::get_all_sites()
+	  *
+	  * @param none
+	  */
+	public function get_all_sites() {
+
+		global $wpdb;
+
+		// Query all blogs from multi-site install
+		$blogs = $wpdb->get_results("SELECT blog_id,domain,path FROM wp_blogs where blog_id > 1 ORDER BY path");
+		$network_home = $wpdb->get_results("SELECT option_value FROM wp_options WHERE (option_name=\"siteurl\" OR option_name=\"blogname\") ORDER BY option_name ASC");
+		
+		// Start unordered list
+		$list = '<ul style="padding:0;">';
+		$list .= '<li><a title="Network home site" href="'.$network_home[1]->option_value.'">'.$network_home[0]->option_value.'</a></li>';
+		
+		// For each blog search for blog name in respective options table
+		foreach( $blogs as $blog ) {
+
+			// Query for name from options table
+			$blogname = $wpdb->get_results("SELECT option_value FROM wp_".$blog->blog_id ."_options WHERE option_name='blogname' ");
+			foreach( $blogname as $name ) { 
+
+				// Create bullet with name linked to blog home page
+				$list .= '<li>';
+				$list .= '<a title="Visit '.$name->option_value.'" href="http://';
+				$list .= $blog->domain;
+				$list .= $blog -> path;
+				$list .= '">';
+				$list .= $name->option_value;
+				$list .= '</a></li>';
+
+			}
+		}
+
+		// End unordered list
+		$list .= '</ul>';
+		return $list;
+	}
 }
 
-
-function get_all_sites() {
-
-	global $wpdb;
-
-	// Query all blogs from multi-site install
-	$blogs = $wpdb->get_results("SELECT blog_id,domain,path FROM wp_blogs where blog_id > 1 ORDER BY path");
-
-	// Start unordered list
-	echo '<ul>';
-
-	// For each blog search for blog name in respective options table
-	foreach( $blogs as $blog ) {
-
-		// Query for name from options table
-		$blogname = $wpdb->get_results("SELECT option_value FROM wp_".$blog->blog_id ."_options WHERE option_name='blogname' ");
-		foreach( $blogname as $name ) { 
-
-			// Create bullet with name linked to blog home pag
-			echo '<li>';
-			echo '<a href="http://';
-			echo $blog->domain;
-			echo $blog -> path;
-			echo '">';
-			echo $name->option_value;
-			echo '</a></li>';
-
-		}
-	}
-
-	// End unordered list
-	echo '</ul>';
+function registerLNSWidget() {
+	// register LNSWidget widget
+	register_widget('LNSWidget');
 }
 
 add_action('admin_notices','get_all_sites');
+add_action( 'widgets_init', create_function( '', 'register_widget( "LNSwidget" );' ) );
 ?>
