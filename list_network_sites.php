@@ -1,15 +1,15 @@
 <?php
 /**
  * @package List_Network_Sites
- * @version 0.1.0
+ * @version 0.1.1
  */
 /*
 Plugin Name: List Network Sites
-Plugin URI: http://github.com/patproct/
-Description: This plugin should do what I tell it.
-Author: Matt Mullenweg
-Version: 0.1.0
-Author URI: http://github.com/patproct/
+Plugin URI: https://github.com/patproct/List-Network-Sites
+Description: This plugin features a widget that will display a list of the sites in the Network in which it is installed.
+Author: Patrick Proctor
+Version: 0.1.1
+Author URI: https://patrickjproctor.com/
 */
 
 /**
