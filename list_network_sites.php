@@ -72,7 +72,7 @@ class LNSWidget extends WP_Widget
 			$title = $instance[ 'title' ];
 		}
 		else {
-			$title = __( 'New title', 'text_domain' );
+			$title = __( 'Sites on this Network', 'text_domain' );
 		}
 		?>
 		<p>
@@ -94,7 +94,7 @@ class LNSWidget extends WP_Widget
 		global $wpdb;
 
 		// Query all blogs from multi-site install
-		$blogs = $wpdb->get_results("SELECT blog_id,domain,path FROM wp_blogs where (blog_id > 0 AND public = 1) ORDER BY blog_id ASC");
+		$blogs = $wpdb->get_results("SELECT blog_id,domain,path FROM wp_blogs where (blog_id > 0 AND public = 1) ORDER BY blog_id ASC LIMIT 0, 15");
 		
 		// Start unordered list
 		$list = '<ul class="list_network_sites_widget">';
