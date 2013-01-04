@@ -94,18 +94,16 @@ class LNSWidget extends WP_Widget
 		global $wpdb;
 
 		// Query all blogs from multi-site install
-		$blogs = $wpdb->get_results("SELECT blog_id,domain,path FROM wp_blogs where blog_id > 1 ORDER BY path");
-		$network_home = $wpdb->get_results("SELECT option_value FROM wp_options WHERE (option_name=\"siteurl\" OR option_name=\"blogname\") ORDER BY option_name ASC");
+		$blogs = $wpdb->get_results("SELECT blog_id,domain,path FROM wp_blogs where blog_id > 0 ORDER BY blog_id ASC");
 		
 		// Start unordered list
 		$list = '<ul style="padding:0;">';
-		$list .= '<li><a title="Network home site" href="'.$network_home[1]->option_value.'">'.$network_home[0]->option_value.'</a></li>';
 		
 		// For each blog search for blog name in respective options table
 		foreach( $blogs as $blog ) {
-
+			$blog_id = ($blog->blog_id <= 1) ? '' : $blog->blog_id.'_';
 			// Query for name from options table
-			$blogname = $wpdb->get_results("SELECT option_value FROM wp_".$blog->blog_id ."_options WHERE option_name='blogname' ");
+			$blogname = $wpdb->get_results("SELECT option_value FROM wp_".$blog_id ."options WHERE option_name='blogname' ");
 			foreach( $blogname as $name ) { 
 
 				// Create bullet with name linked to blog home page
