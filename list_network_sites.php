@@ -57,6 +57,7 @@ class LNSWidget extends WP_Widget
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['num_sites'] = strip_tags( $new_instance['num_sites'] );
+		// TODO: Make sure only integers can be used here
 
 		return $instance;
 	}
