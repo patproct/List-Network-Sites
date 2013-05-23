@@ -1,7 +1,7 @@
 <?php
 /**
  * @package List_Network_Sites
- * @version 0.1.1
+ * @version 0.2.0
  */
 /*
 Plugin Name: List Network Sites
@@ -21,7 +21,7 @@ class LNSWidget extends WP_Widget
 		parent::__construct(
 			'lns_widget', // Base ID
 			'LNS Widget', // Name
-			array( 'description' => __('LNS Widget', 'text_domain'), ) // Args
+			array( 'description' => __('List Network Sites', 'text_domain'), ) // Args
 		);
 	}
 	/**
@@ -39,7 +39,7 @@ class LNSWidget extends WP_Widget
 		echo $before_widget;
 		if ( ! empty( $title ) )
 			echo $before_title . $title . $after_title;
-		echo __( $this->get_all_sites(), 'text_domain' );
+		echo __( $this->get_all_sites($instance), 'text_domain' );
 		echo $after_widget;
 	}
 
@@ -56,6 +56,7 @@ class LNSWidget extends WP_Widget
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['num_sites'] = strip_tags( $new_instance['num_sites'] );
 
 		return $instance;
 	}
@@ -74,10 +75,15 @@ class LNSWidget extends WP_Widget
 		else {
 			$title = __( 'Sites on this Network', 'text_domain' );
 		}
+		$num_sites = ( isset( $instance['num_sites'] ) ) ? $instance['num_sites'] : __( '15', 'text_domain' );
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+		</p>
+		<p>
+		<label for="<?php echo $this->get_field_id( 'num_sites' ); ?>"><?php _e( 'Maximum number of sites to display:' ); ?></label>
+		<input class="widefat" id="<?php echo $this->get_field_id( 'num_sites' ); ?>" name="<?php echo $this->get_field_name( 'num_sites' ); ?>" type="text" value="<?php echo esc_attr( $num_sites ); ?>" />
 		</p>
 		<?php 
 	}
@@ -89,12 +95,12 @@ class LNSWidget extends WP_Widget
 	  *
 	  * @param none
 	  */
-	public function get_all_sites() {
+	public function get_all_sites($instance) {
 
 		global $wpdb;
 
 		// Query all blogs from multi-site install
-		$blogs = $wpdb->get_results("SELECT blog_id,domain,path FROM wp_blogs where (blog_id > 0 AND public = 1) ORDER BY blog_id ASC LIMIT 0, 15");
+		$blogs = $wpdb->get_results("SELECT blog_id,domain,path FROM wp_blogs where (blog_id > 0 AND public = 1) ORDER BY blog_id ASC LIMIT 0, ".$instance['num_sites']."");
 		
 		// Start unordered list
 		$list = '<ul class="list_network_sites_widget">';
