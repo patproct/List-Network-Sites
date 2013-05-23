@@ -1,5 +1,6 @@
 # List-Network-Sites
 ## Written by Patrick Proctor
+## Version 0.1.1
 
 Code repository is available on [GitHub](https://github.com/patproct/List-Network-Sites "List Network Sites plugin on GitHub").
 
