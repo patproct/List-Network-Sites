@@ -24,9 +24,6 @@ class LNSWidget extends WP_Widget
 			array( 'description' => __('List Network Sites', 'text_domain'), ) // Args
 		);
 	}
-	public static function init() {
-		register_widget('LNSWidget');
-	}
 	
 	/**
 	 * Front-end display of widget.
@@ -74,12 +71,13 @@ class LNSWidget extends WP_Widget
 	 * @param array $instance Previously saved values from database.
 	 */
 	public function form( $instance ) {
-		if ( isset( $instance[ 'title' ] ) ) {
-			$title = $instance[ 'title' ];
-		}
-		else {
-			$title = __( 'Sites on this Network', 'text_domain' );
-		}
+		$title = ( isset( $instance['title'] ) ) ? $instance['title'] : __( 'Sites on this network', 'text_domain' );
+		// if ( isset( $instance[ 'title' ] ) ) {
+		// 	$title = $instance[ 'title' ];
+		// }
+		// else {
+		// 	$title = __( 'Sites on this Network', 'text_domain' );
+		// }
 		$num_sites = ( isset( $instance['num_sites'] ) ) ? $instance['num_sites'] : __( '15', 'text_domain' );
 		?>
 		<p>
@@ -141,5 +139,6 @@ function registerLNSWidget() {
 }
 
 add_action('admin_notices','get_all_sites');
-add_action( 'widgets_init', create_function( '', 'register_widget( "LNSWidget" );' ) );
+// add_action( 'widgets_init', create_function( '', 'register_widget( "LNSWidget" );' ) );
+add_action( 'widgets_init', 'registerLNSWidget' );
 ?>
