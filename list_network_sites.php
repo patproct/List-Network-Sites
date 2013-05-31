@@ -24,6 +24,10 @@ class LNSWidget extends WP_Widget
 			array( 'description' => __('List Network Sites', 'text_domain'), ) // Args
 		);
 	}
+	public static function init() {
+		register_widget('LNSWidget');
+	}
+	
 	/**
 	 * Front-end display of widget.
 	 *
@@ -117,7 +121,7 @@ class LNSWidget extends WP_Widget
 				$list .= '<li>';
 				$list .= '<a title="Visit '.$name->option_value.'" href="http://';
 				$list .= $blog->domain;
-				$list .= $blog -> path;
+				$list .= $blog->path;
 				$list .= '">';
 				$list .= $name->option_value;
 				$list .= '</a></li>';
@@ -137,5 +141,5 @@ function registerLNSWidget() {
 }
 
 add_action('admin_notices','get_all_sites');
-add_action( 'widgets_init', create_function( '', 'register_widget( "LNSwidget" );' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget( "LNSWidget" );' ) );
 ?>
