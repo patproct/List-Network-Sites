@@ -71,13 +71,7 @@ class LNSWidget extends WP_Widget
 	 * @param array $instance Previously saved values from database.
 	 */
 	public function form( $instance ) {
-		$title = ( isset( $instance['title'] ) ) ? $instance['title'] : __( 'Sites on this network', 'text_domain' );
-		// if ( isset( $instance[ 'title' ] ) ) {
-		// 	$title = $instance[ 'title' ];
-		// }
-		// else {
-		// 	$title = __( 'Sites on this Network', 'text_domain' );
-		// }
+		$title = ( isset( $instance['title'] ) ) ? $instance['title'] : __( 'Sites on this Network', 'text_domain' );
 		$num_sites = ( isset( $instance['num_sites'] ) ) ? $instance['num_sites'] : __( '15', 'text_domain' );
 		?>
 		<p>
